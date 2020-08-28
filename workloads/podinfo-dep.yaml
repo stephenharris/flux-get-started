@@ -1,8 +1,7 @@
----
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: podinfo
+  name: rollouts-podinfo
   namespace: demo
   labels:
     app: podinfo
@@ -11,18 +10,23 @@ metadata:
     fluxcd.io/tag.init: regex:^3.10.*
     fluxcd.io/tag.podinfod: semver:~3.1
 spec:
+  replicas: 1
   strategy:
-    rollingUpdate:
-      maxUnavailable: 0
-    type: RollingUpdate
+    canary:
+      canaryService: podinfo-canary
+      stableService: podinfo-stable
+      trafficRouting:
+        nginx:
+          stableIngress: rollouts-podinfo-stable
+      steps:
+      - setWeight: 5
+      - pause: {}
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: podinfo
+        app: podinfo
   template:
     metadata:
-      annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9797"
       labels:
         app: podinfo
     spec:
@@ -74,3 +78,6 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
+      
+
+
