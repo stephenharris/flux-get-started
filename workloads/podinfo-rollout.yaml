@@ -20,7 +20,8 @@ spec:
           stableIngress: rollouts-podinfo-stable
       steps:
       - setWeight: 5
-      - pause: {}
+      - setWeight: 40
+      - setWeight: 100
   revisionHistoryLimit: 2
   selector:
     matchLabels:
