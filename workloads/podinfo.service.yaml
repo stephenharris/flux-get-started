@@ -4,7 +4,7 @@ metadata:
   name: podinfo-canary
   namespace: demo
   labels:
-   - foo: bar
+    foo: bar
 spec:
   ports:
   - port: 9898
@@ -21,7 +21,7 @@ kind: Service
 metadata:
   name: podinfo-stable
   labels:
-   - foo: bar
+    foo: bar
 spec:
   ports:
   - port: 9898
